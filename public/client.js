@@ -14,8 +14,6 @@ function Circle(x = 50, y = 50, r =10, col = '#ffc689')  {
 	this.y = y;
 	this.r = r;	
   this.col = col;
-  /*this.vx = Math.cos(this.angle*Math.PI/180) * this.speed;
-  this.vy = Math.sin(this.angle*Math.PI/180) * this.speed;*/
   this.vx = random(-5, 5);
   this.vy = random(-5, 5);
 	this.angle = 25;
@@ -34,23 +32,38 @@ Circle.prototype.turn = function () {
 }
 Circle.prototype.draw = function () {
 	fill(this.col);
-	ellipse(this.x, this.y, this.r)
+	ellipse(this.x, this.y, this.r);
+  return this;
 };
 // ----------------------------
 // Tailed Child class (or subclass)
 // ----------------------------
 function TailedCircle(x = 50, y = 50, r =10, col = '#ffc689'){
   Circle.call(this, x, y, r, col);
+  this.num_segments = 5;
+  this.diff = 10;
+  this.x_start = this.x;
+  this.y_start = this.y;
+  this.x_cor = [];
+  this.y_cor = [];
+  this.tail = this.num_segments * rect(81, 81, 63, 63);
 }
 TailedCircle.prototype = Object.create(Circle.prototype);
 TailedCircle.prototype.constructor = Circle;
 // Override the move() method
+TailedCircle.prototype.draw = function() {
+  fill(this.col);
+  ellipse(this.x, this.y, this.r);
+  line(this.x_start, this.y_start, this.x, this.y);
+  return this;
+
+  return this; // allows method chaining
+};
 TailedCircle.prototype.move = function() {
   // reverse direction ('bounce')
   this.collision();
   this.x += this.vx;
   this.y += this.vy;
-
   return this; // allows method chaining
 };
 TailedCircle.prototype.collision = function() {
@@ -67,14 +80,13 @@ TailedCircle.prototype.collision = function() {
 function setup() {
 	createCanvas(1000, 1000);
 	background("#ffffff");
-  player = new TailedCircle(mouseX, mouseY, 50);
+  player = new TailedCircle(500, 500, 50);
 }
 //PROCESSING every .. seconds
 function draw() {
 	//clear background
 	background("#2834ff");
-  player.move();
-	player.draw();
+  player.move().draw();
 
 }
 //PROCESSING every .. seconds
