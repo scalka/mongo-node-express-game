@@ -40,8 +40,8 @@ Circle.prototype.draw = function () {
 // ----------------------------
 function TailedCircle(x = 50, y = 50, r =10, col = '#ffc689'){
   Circle.call(this, x, y, r, col);
-  this.num_segments = 5;
   this.diff = 10;
+  this.num_segments = 1;
   this.x_start = this.x;
   this.y_start = this.y;
   this.x_cor = [];
@@ -54,16 +54,27 @@ TailedCircle.prototype.constructor = Circle;
 TailedCircle.prototype.draw = function() {
   fill(this.col);
   ellipse(this.x, this.y, this.r);
-  line(this.x_start, this.y_start, this.x, this.y);
-  return this;
-
+  this.drawTail();
   return this; // allows method chaining
+};
+TailedCircle.prototype.drawTail = function() {
+  console.log("num_segments: " + this.num_segments);
+  for (var i = 0; i < this.num_segments; i++){
+    line(this.x_cor[i], this.y_cor[i], this.x_cor[i + 1], this.y_cor[i + 1]);
+  }
+
+  this.x_cor.push(this.x);
+  this.y_cor.push(this.y);
+  console.log(this.x_cor);
 };
 TailedCircle.prototype.move = function() {
   // reverse direction ('bounce')
   this.collision();
+
+  this.num_segments += 1;
   this.x += this.vx;
   this.y += this.vy;
+  
   return this; // allows method chaining
 };
 TailedCircle.prototype.collision = function() {
@@ -89,7 +100,7 @@ function draw() {
   player.move().draw();
 
 }
-//PROCESSING every .. seconds
+//PROCESSING every mouseclick
 function mousePressed() {
 	player.turn();
 }
