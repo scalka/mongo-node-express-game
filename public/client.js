@@ -54,23 +54,24 @@ TailedCircle.prototype.constructor = Circle;
 TailedCircle.prototype.draw = function() {
   fill(this.col);
   ellipse(this.x, this.y, this.r);
-  this.drawTail();
   return this; // allows method chaining
 };
 TailedCircle.prototype.drawTail = function() {
-  console.log("num_segments: " + this.num_segments);
   for (var i = 0; i < this.num_segments; i++){
-    line(this.x_cor[i], this.y_cor[i], this.x_cor[i + 1], this.y_cor[i + 1]);
+   //Check for this.x_cor[i + 1] so we dont get error "It looks like line() received an empty variable in spot #2 (zero-based index)
+   if(this.x_cor[i + 1]){
+      line(this.x_cor[i], this.y_cor[i], this.x_cor[i + 1], this.y_cor[i + 1]);
+   } 
   }
 
   this.x_cor.push(this.x);
   this.y_cor.push(this.y);
-  console.log(this.x_cor);
+  return this;
 };
 TailedCircle.prototype.move = function() {
   // reverse direction ('bounce')
   this.collision();
-
+  this.drawTail();
   this.num_segments += 1;
   this.x += this.vx;
   this.y += this.vy;
@@ -97,7 +98,7 @@ function setup() {
 function draw() {
 	//clear background
 	background("#2834ff");
-  player.move().draw();
+  player.draw().move();
 
 }
 //PROCESSING every mouseclick
