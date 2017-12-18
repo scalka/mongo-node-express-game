@@ -1,11 +1,12 @@
 console.log('Server-side code running');
-
+//set up server
 const express = require('express');
+const app = express();
 const MongoClient = require('mongodb').MongoClient;
 
-const app = express();
-
 // serve files from the public directory
+// define directiories which are exposed to web
+app.use(express.static(__dirname + '/node_modules'));
 app.use(express.static('public'));
 
 // connect to the db and start the express server
@@ -14,7 +15,6 @@ let db;
 // Replace the URL below with the URL for your database
 //const url =  'mongodb://user:password@mongo_address:mongo_port/clicks';
 const url = 'mongodb://localhost:27017/clicks';
-
 MongoClient.connect(url, (err, database) => {
   if(err) {
     return console.log(err);
@@ -26,6 +26,7 @@ MongoClient.connect(url, (err, database) => {
   });
 });
 
+// ROUTING
 // serve the homepage
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
