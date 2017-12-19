@@ -12,7 +12,7 @@ let player;
 function Circle(x = 50, y = 50, r =10, col = '#ffc689')  {
 	this.x = x;
 	this.y = y;
-	this.r = r;	
+	this.r = r;
   this.col = col;
   this.vx = random(-5, 5);
   this.vy = random(-5, 5);
@@ -61,7 +61,7 @@ TailedCircle.prototype.drawTail = function() {
    //Check for this.x_cor[i + 1] so we dont get error "It looks like line() received an empty variable in spot #2 (zero-based index)
    if(this.x_cor[i + 1]){
       line(this.x_cor[i], this.y_cor[i], this.x_cor[i + 1], this.y_cor[i + 1]);
-   } 
+   }
   }
 
   this.x_cor.push(this.x);
@@ -75,7 +75,7 @@ TailedCircle.prototype.move = function() {
   this.num_segments += 1;
   this.x += this.vx;
   this.y += this.vy;
-  
+
   return this; // allows method chaining
 };
 TailedCircle.prototype.collision = function() {
