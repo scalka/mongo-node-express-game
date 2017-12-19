@@ -58,34 +58,41 @@ TailedCircle.prototype.draw = function() {
   return this; // allows method chaining
 };
 TailedCircle.prototype.drawTail = function() {
+	noFill();
+	stroke(255, 0, 0);
+	beginShape();
   for (var i = 0; i < this.num_segments; i++){
    //Check for this.x_cor[i + 1] so we dont get error "It looks like line() received an empty variable in spot #2 (zero-based index)
    if(this.x_cor[i + 1]){
       line(this.x_cor[i], this.y_cor[i], this.x_cor[i + 1], this.y_cor[i + 1]);
+			//vertex(this.x_cor[i], this.y_cor[i]);
+			//vertex(this.x_cor[i + 1], this.y_cor[i + 1]);
    }
+		//endShape();
+		fill(255, 204, 0, 50);
   }
-
   this.x_cor.push(this.x);
   this.y_cor.push(this.y);
   return this;
 };
 TailedCircle.prototype.move = function() {
   // reverse direction ('bounce')
-  this.collision();
-  this.drawTail();
+  this.collision().drawTail();
   this.num_segments += 1;
   this.x += this.vx;
   this.y += this.vy;
 
   return this; // allows method chaining
 };
-TailedCircle.prototype.collision = function() {
+TailedCircle.prototype.collision = function(obj_a, obj_b) {
   if (this.x <= 0 || this.x >= 1000 ){
     this.vx = -this.vx;
   }
   if (this.y <= 0 || this.y >= 1000){
     this.vy = -this.vy;
   }
+
+	return this;
 };
 
 

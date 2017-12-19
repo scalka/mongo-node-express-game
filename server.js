@@ -1,5 +1,3 @@
-
-
 console.log('Server-side code running');
 //set up server
 const express = require('express');
