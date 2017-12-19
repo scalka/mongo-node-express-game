@@ -4,16 +4,19 @@
   "description": "Node, Express and MongoDB ",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint app"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "eslint-config-airbnb": "^16.1.0",
     "express": "^4.16.2",
     "mongodb": "^2.2.33"
   },
   "devDependencies": {
     "browser-sync": "^2.18.13",
+    "eslint": "^4.13.1",
     "gulp": "^3.9.1",
     "gulp-nodemon": "^2.2.1"
   }

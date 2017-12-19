@@ -38,6 +38,7 @@ Circle.prototype.draw = function () {
 // ----------------------------
 // Tailed Child class (or subclass)
 // ----------------------------
+
 function TailedCircle(x = 50, y = 50, r =10, col = '#ffc689'){
   Circle.call(this, x, y, r, col);
   this.diff = 10;

@@ -1,3 +1,5 @@
+
+
 console.log('Server-side code running');
 //set up server
 const express = require('express');
@@ -19,7 +21,7 @@ MongoClient.connect(url, (err, database) => {
   if(err) {
     return console.log(err);
   }
-  db = database;
+  db = database
   // start the express web server listening on 8080
   app.listen(8080, () => {
     console.log('listening on 8080');

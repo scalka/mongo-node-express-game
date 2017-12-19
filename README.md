@@ -4,4 +4,4 @@ mongo-node-express small application
 
 # Setup
 1. Run ```mongod.exe```
-2. ``` nodemon server.js ```
+2. ``` nodemon server.js ``` or ```gulp```
