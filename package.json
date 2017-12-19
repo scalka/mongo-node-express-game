@@ -11,5 +11,8 @@
   "dependencies": {
     "express": "^4.16.2",
     "mongodb": "^2.2.33"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1"
   }
 }
