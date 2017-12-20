@@ -1,7 +1,9 @@
-console.log('Server-side code running');
 //set up server
+console.log('Server-side code running');
 const express = require('express');
 const app = express();
+const server = require('http').Server(app);
+const io = require('socket.io')(server);
 const MongoClient = require('mongodb').MongoClient;
 
 // serve files from the public directory
@@ -21,8 +23,11 @@ MongoClient.connect(url, (err, database) => {
   }
   db = database
   // start the express web server listening on 8080
-  app.listen(8080, () => {
+/*  app.listen(8080, () => {
     console.log('listening on 8080');
+  });*/
+  server.listen(8000, () => {
+    console.log("Well done, now I am listening on ", server.address().port);
   });
 });
 
@@ -52,5 +57,13 @@ app.get('/clicks', (req, res) => {
   db.collection('clicks').find().toArray((err, result) => {
     if (err) return console.log(err);
     res.send(result);
+  });
+});
+
+io.on('connection', (socket) => {
+  console.log("io.on connection");
+  socket.emit('news', { hello: 'world' });
+  socket.on('my other event', function (data) {
+    console.log("connection" + data);
   });
 });

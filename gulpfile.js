@@ -5,7 +5,7 @@ var nodemon = require('gulp-nodemon');
 
 gulp.task('browser-sync', ['nodemon'], function() {
     browserSync.init(null, {
-        proxy: "http://localhost:8080", // port of node server
+        proxy: "http://localhost:8000", // port of node server
     });
 });
 
