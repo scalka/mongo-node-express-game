@@ -113,12 +113,12 @@ class TailedCircle extends Circle {
 */
 const socket = io.connect();
 
+
 socket.on('news', function (data) {
   console.log(data);
   socket.emit('my other event', { my: 'data' });
 });
 
-let player;
 //PROCESSING at start
 function setup() {
 	createCanvas(1000, 1000);
