@@ -24,7 +24,6 @@ class Circle {
     this.angle += 25;
     this.vx = Math.cos(this.angle * (Math.PI / 180)) * this.speed;
     this.vy = Math.sin(this.angle * (Math.PI / 180)) * this.speed;
-    console.log(this.angle);
   }
 
   draw() {
@@ -95,48 +94,46 @@ class TailedCircle extends Circle {
 
 class Grid {
   constructor(rows, cols){
-    this.grid = []; // A 1-dimensional array containing the visual grid
-    this.cells = [];
+    this.grid = []; // A multidimentional array containing the visual grid
+    this.cell = {};
     this.rowsCount = rows; // The height of the map, in rows
     this.colsCount = cols; // The width of the map, in columns
     this.tileSize = 64; // The tile size, in pixels
   }
   // Gets the cell index in a certain position
   getCell(col, row) {
-    if (!this.grid[y]) {
-      console.log(`No such y coordinate ${this.y}`);
-      return false;
-    };
-    if (!this.grid[y][x]) {
-      console.log(`No such x coordinate ${this.x}`);
-      return false;
-    };
-     return this.grid[y][x];
-    // return this.grid[row * grid.cols + col]
+     return this.grid[col][row];
   }
+
   render() {
-    console.log("render");
+    //console.log("render");
       for (let column = 0; column < this.colsCount; column++) {
+        this.grid[column] = []; // create the next row (inner array)
         for (let row = 0; row < this.rowsCount; row++) {
           fill(255);
-          rect(column * this.tileSize, row * this.tileSize, this.tileSize, this.tileSize);
-          // console.log(row);
+          stroke(0);
+          this.cell = {
+            column: column,
+            row: row,
+            square: rect(column * this.tileSize, row * this.tileSize, this.tileSize, this.tileSize)
+          }
+          this.grid[column][row] = this.cell;
         }
       }
   }
-}
 
-class Cell {
-  constructor(x, y, element){
-    this.x = x;
-    this.y = y;
-    this.element = element;
+  gridTouch(circle, column, row) {
+    //console.log(`Circle is touching grid`);
+    console.log(this.getCell(4,15));
+    stroke(100);
+    this.cell = {
+      column: column,
+      row: row,
+      square: rect(column * this.tileSize, row * this.tileSize, this.tileSize, this.tileSize)
+    }
+    this.grid[column][row] = this.cell;
   }
 }
-
-
-
-
 
 /*
 .emit Sends messages between server-client(s).
@@ -163,7 +160,7 @@ function draw() {
 	//background("#2834ff");
   grid.render();
   player.draw().move();
-
+  grid.gridTouch(player, 4, 5);
 }
 //PROCESSING every mouseclick
 function mousePressed() {
