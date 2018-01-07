@@ -1,4 +1,3 @@
-
 // PROCESSING START
 // Circle - Player class
 let player;

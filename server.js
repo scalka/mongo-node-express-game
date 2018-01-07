@@ -1,4 +1,4 @@
-//set up server
+// set up server
 console.log('Server-side code running');
 const express = require('express');
 const app = express();

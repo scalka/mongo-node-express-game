@@ -1,7 +1,8 @@
-var gulp = require('gulp');
-var browserSync = require('browser-sync');
-var reload = browserSync.reload;
-var nodemon = require('gulp-nodemon');
+let gulp = require('gulp');
+let browserSync = require('browser-sync');
+
+let reload = browserSync.reload;
+let nodemon = require('gulp-nodemon');
 
 gulp.task('browser-sync', ['nodemon'], function() {
     browserSync.init(null, {
@@ -15,7 +16,7 @@ gulp.task('default', ['browser-sync'], function () {
 });
 
 gulp.task('nodemon', function (cb) {
-    var callbackCalled = false;
+    let callbackCalled = false;
     return nodemon({script: 'server.js'}).on('start', function () {
         if (!callbackCalled) {
             callbackCalled = true;
