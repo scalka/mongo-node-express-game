@@ -150,11 +150,6 @@ function keyPressed() {
   player.turn(keyCode);
 }
 
-function newOpponent(data) {
-  let new_player = new PlayerOpponent(id = data.id, x = data.x, y = data.y);
-  opponnents.push(new_player);
-  console.log(new_player);
-}
 // socket.io
 socket.on('connect', function (data) {
     console.log(socket.id);
@@ -170,24 +165,21 @@ socket.on('playersList', function (data) {
       opponnents.push(new_player);
     }
   }
+  let check = opponnents.findIndex(x => x.id === player.id);
+  opponnents.splice(check, 1);
 });
 
 socket.on('updatedPlayersList', function (data) {
   opponnents = [];
-  console.log(data);
   for (let i = 0; i < data.length; i++){
-    if (data.id !== player.id){
-      let new_player = new PlayerOpponent(id = data.id, x = data.x, y = data.y);
-      opponnents.push(new_player);
-    }
+    let new_player = new PlayerOpponent(id = data[i].id, x = data[i].x, y = data[i].y);
+    opponnents.push(new_player);
   }
+
 });
 
 socket.on('updatedPlayersPosition', function (data) {
-//  console.log(opponnents.length);
-
       for (let i = 0; i < opponnents.length; i++){
-        console.log("here");
           opponnents[i].x = data[i].x;
           opponnents[i].y = data[i].y;
           opponnents[i].vx = data[i].vx;
@@ -195,7 +187,6 @@ socket.on('updatedPlayersPosition', function (data) {
           opponnents[i].ax = data[i].ax;
           opponnents[i].ay = data[i].ay;
       }
-
 });
 
 
