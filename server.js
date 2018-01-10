@@ -72,18 +72,22 @@ io.on('connection', (client) => {
     console.log("newPlayer connection:" + data);
     all_players.push(data);
     client.emit('playersList', all_players );
+    client.broadcast.emit('updatedPlayersList', all_players );
   });
 
-  client.on('updateOpponents', function (data) {
-    for (let i = 0; i < all_players.length; i++ ){
-      //  console.log("players is " + all_players[i][0]);
-      //  console.log(data);
-        if(all_players[i].id === data){
-          all_players[i] = data;
-        }
+  client.on('updateOpponents', function (player) {
+    //console.log(player);
+    for (let i = 0; i < all_players.length; i++){
+      if (  all_players[i].id === player.id){
+        all_players[i] = player;
+      }
     }
-    client.emit('updatedPlayersList', all_players);
+    client.emit('updatedPlayersPosition', all_players);
   });
+
+/*  client.on('updatePlayersList', function (player) {
+    client.emit('updatedPlayersList', all_players);
+  });*/
 
   //disconnected client
   client.on('disconnect', function(){

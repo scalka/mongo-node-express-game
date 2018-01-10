@@ -140,10 +140,10 @@ function draw() {
   grid.render();
   // player.checkCollision(player2)
   player.draw();
-  //socket.emit('updateOpponents', player.id);
+  socket.emit('updateOpponents', player);
   for (let i = 0; i < opponnents.length; i++){
-    console.log(opponnents[i]);
-    opponnents[i].draw();
+      opponnents[i].draw();
+
   }
 }
 function keyPressed() {
@@ -159,26 +159,42 @@ function newOpponent(data) {
 socket.on('connect', function (data) {
     console.log(socket.id);
     player.setId(socket.id);
-
-    socket.emit('newPlayer', { player });
+    socket.emit('newPlayer',  player );
 });
-
+// creating all opponents
 socket.on('playersList', function (data) {
-  console.log(data);
+  opponnents = [];
   for (let i = 0; i < data.length-1; i++){
     if (data.id !== player.id){
       let new_player = new PlayerOpponent(id = data.id, x = data.x, y = data.y);
       opponnents.push(new_player);
-      console.log(new_player);
     }
   }
 });
 
 socket.on('updatedPlayersList', function (data) {
-  for (let i = 0; i < opponnents.length; i++){
-    opponnents[i] = data[i];
-    //console.log(opponnents[i] );
+  opponnents = [];
+  console.log(data);
+  for (let i = 0; i < data.length; i++){
+    if (data.id !== player.id){
+      let new_player = new PlayerOpponent(id = data.id, x = data.x, y = data.y);
+      opponnents.push(new_player);
+    }
   }
+});
+
+socket.on('updatedPlayersPosition', function (data) {
+//  console.log(opponnents.length);
+
+      for (let i = 0; i < opponnents.length; i++){
+        console.log("here");
+          opponnents[i].x = data[i].x;
+          opponnents[i].y = data[i].y;
+          opponnents[i].vx = data[i].vx;
+          opponnents[i].vy = data[i].vy;
+          opponnents[i].ax = data[i].ax;
+          opponnents[i].ay = data[i].ay;
+      }
 
 });
 
