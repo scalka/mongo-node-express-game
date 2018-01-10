@@ -1,4 +1,4 @@
-// set up server
+//set up server
 console.log('Server-side code running');
 const express = require('express');
 const app = express();
@@ -60,10 +60,50 @@ app.get('/clicks', (req, res) => {
   });
 });
 
-io.on('connection', (socket) => {
+// socket.io
+
+let all_players = [];
+let points = 0;
+
+io.on('connection', (client) => {
   console.log("io.on connection");
-  socket.emit('news', { hello: 'world' });
-  socket.on('my other event', function (data) {
-    console.log("connection" + data);
+
+  let client_id = client.id;
+  client.emit('setup', client_id );
+
+  client.on('newPlayer', function (data) {
+    console.log("newPlayer connection:" + data);
+    all_players.push(data);
+    client.emit('playersList', all_players );
   });
+
+  client.on('updateOpponents', function (data) {
+    for (let i = 0; i < all_players.length; i++ ){
+      //  console.log("players is " + all_players[i][0]);
+      //  console.log(data);
+        if(all_players[i].id === data){
+          all_players[i] = data;
+        }
+    }
+    //console.log("update opponnents" + client.id)
+
+    client.emit('updatedPlayersList', all_players);
+  });
+
+  //disconnected client
+  client.on('disconnect', function(){
+      num_players=-1;
+      //checking which player disconnected and deleting him from an array
+      for (let i = 0; i < all_players.length; i++ ){
+          if(all_players[i].id === client.id){
+              //update top pannel
+              //io.emit('updatePlayersListAndTopPanel', allPlayers[i].nickname, allPlayers[i].points, sbIsDrawingAndLeft);
+              //delete from array
+              all_players.splice(i, 1);
+          }
+      }
+      //update list of clients
+      //io.emit('playersList', allPlayers);
+  });
+
 });
