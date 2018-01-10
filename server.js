@@ -68,9 +68,6 @@ let points = 0;
 io.on('connection', (client) => {
   console.log("io.on connection");
 
-  let client_id = client.id;
-  client.emit('setup', client_id );
-
   client.on('newPlayer', function (data) {
     console.log("newPlayer connection:" + data);
     all_players.push(data);
@@ -85,8 +82,6 @@ io.on('connection', (client) => {
           all_players[i] = data;
         }
     }
-    //console.log("update opponnents" + client.id)
-
     client.emit('updatedPlayersList', all_players);
   });
 

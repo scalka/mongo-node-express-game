@@ -126,24 +126,11 @@ let opponnents = [];
 let player;
 let some_id;
 //PROCESSING at start
-function drawOpponent(x, y, vx, vy, ax, ay, radius) {
-    vx += ax;
-    vy += ay;
-    x += vx;
-    y += vy;
-    fill('#ff0000');
-    //console.log(radius);
-    ellipse(x, y, 100);
-    //canvasCollision();
-    return this;
-}
-// PROCESSING END
 function setup() {
   //let nickname = prompt("Nickname: ");
 	createCanvas(1000, 1000);
   player = new PlayerCircle();
-  player.draw();
-  socket.emit('newPlayer', { player });
+
   grid = new Grid(20, 20);
   grid.render();
 }
@@ -153,11 +140,10 @@ function draw() {
   grid.render();
   // player.checkCollision(player2)
   player.draw();
-  socket.emit('updateOpponents', player.id);
+  //socket.emit('updateOpponents', player.id);
   for (let i = 0; i < opponnents.length; i++){
     console.log(opponnents[i]);
-    //opponnents[i].draw();
-    drawOpponent(opponnents[i].x, opponnents[i].y, opponnents[i].vx, opponnents[i].vy, opponnents[i].ax, opponnents[i].ay, opponnents[i].radius);
+    opponnents[i].draw();
   }
 }
 function keyPressed() {
@@ -165,23 +151,29 @@ function keyPressed() {
 }
 
 function newOpponent(data) {
-  let new_player = new PlayerCircle(id = data.id, x = data.x, y = data.y);
+  let new_player = new PlayerOpponent(id = data.id, x = data.x, y = data.y);
   opponnents.push(new_player);
   console.log(new_player);
 }
 // socket.io
-socket.on('setup', function(data){
-  player.setId(data);
+socket.on('connect', function (data) {
+    console.log(socket.id);
+    player.setId(socket.id);
+
+    socket.emit('newPlayer', { player });
 });
 
 socket.on('playersList', function (data) {
   console.log(data);
-  for (let i = 0; i < data.length; i++){
-    //newOpponent(data[i]);
-    console.log(data[i]);
-    opponnents.push(data[i]);
+  for (let i = 0; i < data.length-1; i++){
+    if (data.id !== player.id){
+      let new_player = new PlayerOpponent(id = data.id, x = data.x, y = data.y);
+      opponnents.push(new_player);
+      console.log(new_player);
+    }
   }
 });
+
 socket.on('updatedPlayersList', function (data) {
   for (let i = 0; i < opponnents.length; i++){
     opponnents[i] = data[i];
