@@ -78,11 +78,11 @@ io.on('connection', (client) => {
   client.on('updateOpponents', function (player) {
     //console.log(player);
     for (let i = 0; i < all_players.length; i++){
-      if (  all_players[i].id === player.id){
+      if (all_players[i].id === player.id){
         all_players[i] = player;
       }
     }
-    client.emit('updatedPlayersPosition', all_players);
+    client.broadcast.emit('updatedPlayersPosition', all_players);
   });
 
 /*  client.on('updatePlayersList', function (player) {

@@ -4,13 +4,13 @@
 // ----------------------------
 
 class PlayerOpponent {
-  constructor(id = "", x = 50, y = 50, color = '#ffc689', radius = 100) {
+  constructor(id = "", x, y, color = '#ffc689', radius = 30) {
     this.id = id;
-    this.x = x;
-    this.y = y;
+    this.x = Math.floor((Math.random() * 1000) + 1);;
+    this.y = Math.floor((Math.random() * 1000) + 1);;
     this.radius = radius;
     this.color = color;
-    this.speed = 1;
+    this.speed = 3;
     this.angle = 55;
     this.vx = Math.cos(this.angle*Math.PI/180) * this.speed;
     this.vy = Math.sin(this.angle*Math.PI/180) * this.speed;
@@ -47,9 +47,9 @@ class PlayerOpponent {
 } // end of PlayerCircle
 
 class PlayerCircle extends PlayerOpponent {
-  constructor(id = "", x = 50, y = 50, color = '#ffc689', radius = 100) {
+  constructor(id = "", x, y, color = '#ffcccc', radius = 30) {
     super(id, x, y, color, radius);
-    this.speed = 1;
+    this.speed = 3;
     this.angle = 55;
     this.vx = Math.cos(this.angle*Math.PI/180) * this.speed;
     this.vy = Math.sin(this.angle*Math.PI/180) * this.speed;
@@ -62,11 +62,11 @@ class PlayerCircle extends PlayerOpponent {
       let dx = this.x - objectB.x;
 			let dy = this.y - objectB.y;
 			let distance = this.radius;
-
 			if (dx * dx + dy * dy <= distance * distance){
 				this.collision = true;
         this.radius += 1;
         this.vx = -this.vx;
+        this.collision = true;
 				console.log("collision");
 			}
 			return this;
@@ -138,12 +138,19 @@ function setup() {
 function draw() {
 	//clear background
   grid.render();
-  // player.checkCollision(player2)
+
   player.draw();
   socket.emit('updateOpponents', player);
   for (let i = 0; i < opponnents.length; i++){
+    if(opponnents[i].id !== player.id){
+      player.checkCollision(opponnents[i]);
+      if (player.collision === true) {
+        //socket emit player
+        //return who is bigger
+        //delete that player in backend
+      }
       opponnents[i].draw();
-
+    }
   }
 }
 function keyPressed() {
@@ -158,35 +165,41 @@ socket.on('connect', function (data) {
 });
 // creating all opponents
 socket.on('playersList', function (data) {
-  opponnents = [];
-  for (let i = 0; i < data.length-1; i++){
-    if (data.id !== player.id){
-      let new_player = new PlayerOpponent(id = data.id, x = data.x, y = data.y);
-      opponnents.push(new_player);
-    }
-  }
-  let check = opponnents.findIndex(x => x.id === player.id);
-  opponnents.splice(check, 1);
-});
-
-socket.on('updatedPlayersList', function (data) {
-  opponnents = [];
+  opponnents.length = 0;
   for (let i = 0; i < data.length; i++){
     let new_player = new PlayerOpponent(id = data[i].id, x = data[i].x, y = data[i].y);
     opponnents.push(new_player);
   }
 
+//  let check = opponnents.findIndex(x => x.id === player.id);
+//  opponnents.splice(check, 1);
+});
+
+socket.on('updatedPlayersList', function (data) {
+  opponnents.length = 0;
+  for (let i = 0; i < data.length; i++){
+    let new_player = new PlayerOpponent(id = data[i].id, x = data[i].x, y = data[i].y);
+    opponnents.push(new_player);
+  }
+  console.log("2 "+ opponnents );
+  for (let i = 0; i < all_players.length; i++){
+    if (all_players[i].id === player.id){
+      opponnents.splice(i, 1);
+    }
+  }
+//  let check = opponnents.findIndex(x => x.id === player.id);
+//  opponnents.splice(check, 1);
 });
 
 socket.on('updatedPlayersPosition', function (data) {
-      for (let i = 0; i < opponnents.length; i++){
-          opponnents[i].x = data[i].x;
-          opponnents[i].y = data[i].y;
-          opponnents[i].vx = data[i].vx;
-          opponnents[i].vy = data[i].vy;
-          opponnents[i].ax = data[i].ax;
-          opponnents[i].ay = data[i].ay;
-      }
+    for (let i = 0; i < opponnents.length; i++){
+        opponnents[i].x = data[i].x;
+        opponnents[i].y = data[i].y;
+        opponnents[i].vx = data[i].vx;
+        opponnents[i].vy = data[i].vy;
+        opponnents[i].ax = data[i].ax;
+        opponnents[i].ay = data[i].ay;
+    }
 });
 
 
