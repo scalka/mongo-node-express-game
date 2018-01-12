@@ -34,7 +34,11 @@ MongoClient.connect(url, (err, database) => {
 // ROUTING
 // serve the homepage
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
+  res.sendFile(__dirname + '/public/index.html');
+});
+
+app.get('/game', (req, res) => {
+  res.sendFile(__dirname + '/public/game.html');
 });
 
 // add a document to the DB collection recording the click event
@@ -90,7 +94,8 @@ io.on('connection', (client) => {
     for (let i = 0; i < all_players.length; i++ ) {
       if(all_players[i].id === player.id) {
         //delete from array
-        io.to(player.id).emit('youLost', 'You lost!');
+
+        io.to(player.id).emit('youLost', '/index.html');
         all_players.splice(i, 1);
         io.emit('updatedPlayersList', all_players);
       }

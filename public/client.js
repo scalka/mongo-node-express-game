@@ -2,7 +2,6 @@
 // ----------------------------
 // PlayerCircle Parent class (or subclass) - Player class
 // ----------------------------
-
 class PlayerOpponent {
   constructor(id = '', x, y, radius = 30, color = '#ffc689') {
     this.id = id;
@@ -137,11 +136,11 @@ let opponnents = [];
 let food = [];
 let player;
 let some_id;
-
+let score = document.getElementById('score');
 //PROCESSING at start
 function setup() {
   //let nickname = prompt('Nickname: ');
-	 createCanvas(1000, 1000);
+  createCanvas(1000, 1000);
   player = new PlayerCircle();
   for (let i = 0; i < 15; i++) {
     let snack = new PlayerOpponent(i, Math.floor((Math.random() * 1000) + 1), Math.floor((Math.random() * 1000) + 1), 5, '#cccccc');
@@ -149,6 +148,7 @@ function setup() {
   }
   grid = new Grid(20, 20);
   grid.render();
+  score.innerHTML = player.radius;
 }
 //PROCESSING every .. seconds
 function draw() {
@@ -161,16 +161,15 @@ function draw() {
       let winner = player.checkCollision(opponnents[i]);
       if (player.good_collision) {
         socket.emit('playerLost', opponnents[i]);
-        console.log('winner');
+        //console.log('winner');
       } else if (player.bad_collision) {
-
-        console.log('looser');
+        window.location.href = data;
+        //console.log('looser');
       } else {
         opponnents[i].draw();
       }
     }
   }
-
   food.forEach(function(snack) {
     player.checkCollision(snack);
     if ( player.good_collision ) {
@@ -179,7 +178,7 @@ function draw() {
     }
     snack.draw();
   });
-
+  score.innerHTML = player.radius;
 }
 function keyPressed() {
   player.turn(keyCode);
@@ -230,6 +229,7 @@ socket.on('updatedPlayersPosition', function(data) {
 socket.on('youLost', function(data) {
   // game over screen
   console.log(data);
+  window.location.href = data;
 });
 
 

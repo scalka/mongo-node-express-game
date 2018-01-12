@@ -1,0 +1,15 @@
+#start-btn {
+    color: white;
+    background: #7fcad0;
+    padding: 10px 20px;
+    display: block;
+    margin: 10px 0;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 13px;
+}
+
+#start-btn:hover {
+    background: #6ab8be;
+}
