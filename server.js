@@ -21,13 +21,13 @@ MongoClient.connect(url, (err, database) => {
   if(err) {
     return console.log(err);
   }
-  db = database
+  db = database;
   // start the express web server listening on 8080
-/*  app.listen(8080, () => {
+  /*  app.listen(8080, () => {
     console.log('listening on 8080');
   });*/
   server.listen(8000, () => {
-    console.log("Well done, now I am listening on ", server.address().port);
+    console.log('Well done, now I am listening on ', server.address().port);
   });
 });
 
@@ -66,43 +66,47 @@ let all_players = [];
 let points = 0;
 
 io.on('connection', (client) => {
-  console.log("io.on connection");
+  console.log('io.on connection');
 
-  client.on('newPlayer', function (data) {
-    console.log("newPlayer connection:" + data);
+  client.on('newPlayer', function(data) {
+    console.log('newPlayer connection:' + data);
     all_players.push(data);
     client.emit('playersList', all_players );
     client.broadcast.emit('updatedPlayersList', all_players );
   });
 
-  client.on('updateOpponents', function (player) {
+  client.on('updateOpponents', function(player) {
     //console.log(player);
-    for (let i = 0; i < all_players.length; i++){
-      if (all_players[i].id === player.id){
+    for (let i = 0; i < all_players.length; i++) {
+      if (all_players[i].id === player.id) {
         all_players[i] = player;
       }
     }
     client.broadcast.emit('updatedPlayersPosition', all_players);
   });
 
-/*  client.on('updatePlayersList', function (player) {
-    client.emit('updatedPlayersList', all_players);
-  });*/
-
-  //disconnected client
-  client.on('disconnect', function(){
-      num_players=-1;
-      //checking which player disconnected and deleting him from an array
-      for (let i = 0; i < all_players.length; i++ ){
-          if(all_players[i].id === client.id){
-              //update top pannel
-              //io.emit('updatePlayersListAndTopPanel', allPlayers[i].nickname, allPlayers[i].points, sbIsDrawingAndLeft);
-              //delete from array
-              all_players.splice(i, 1);
-          }
+  client.on('playerLost', function(player) {
+    num_players = -1;
+    for (let i = 0; i < all_players.length; i++ ) {
+      if(all_players[i].id === player.id) {
+        //delete from array
+        io.to(player.id).emit('youLost', 'You lost!');
+        all_players.splice(i, 1);
+        io.emit('updatedPlayersList', all_players);
       }
-      //update list of clients
-      //io.emit('playersList', allPlayers);
+    }
   });
 
+  //disconnected client
+  client.on('disconnect', function() {
+    num_players = -1;
+    //checking which player disconnected and deleting him from an array
+    for (let i = 0; i < all_players.length; i++ ) {
+      if(all_players[i].id === client.id) {
+        //delete from array
+        all_players.splice(i, 1);
+        io.emit('updatedPlayersList', all_players);
+      }
+    }
+  });
 });
