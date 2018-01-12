@@ -137,13 +137,21 @@ let food = [];
 let player;
 let some_id;
 let score = document.getElementById('score');
+
+let randomColor = () => {
+  let x = Math.floor(Math.random() * 256);
+  let y = Math.floor(Math.random() * 256);
+  let z = Math.floor(Math.random() * 256);
+  return 'rgb(' + x + ',' + y + ',' + z + ')';
+};
+
 //PROCESSING at start
 function setup() {
   //let nickname = prompt('Nickname: ');
   createCanvas(1000, 1000);
   player = new PlayerCircle();
   for (let i = 0; i < 15; i++) {
-    let snack = new PlayerOpponent(i, Math.floor((Math.random() * 1000) + 1), Math.floor((Math.random() * 1000) + 1), 5, '#cccccc');
+    let snack = new PlayerOpponent(i, Math.floor((Math.random() * 1000) + 1), Math.floor((Math.random() * 1000) + 1), 5, randomColor());
     food.push(snack);
   }
   grid = new Grid(20, 20);
@@ -163,7 +171,7 @@ function draw() {
         socket.emit('playerLost', opponnents[i]);
         //console.log('winner');
       } else if (player.bad_collision) {
-        window.location.href = data;
+        window.location.href = '/index.html';
         //console.log('looser');
       } else {
         opponnents[i].draw();
@@ -194,7 +202,7 @@ socket.on('connect', function(data) {
 socket.on('playersList', function(data) {
   opponnents.length = 0;
   for (let i = 0; i < data.length; i++) {
-    let new_player = new PlayerOpponent(data[i].id, data[i].x, data[i].y, data[i].radius);
+    let new_player = new PlayerOpponent(data[i].id, data[i].x, data[i].y, data[i].radius, randomColor());
     opponnents.push(new_player);
   }
 
@@ -207,7 +215,7 @@ socket.on('updatedPlayersList', function(data) {
   opponnents.length = 0;
 
   for (let i = 0; i < data.length; i++) {
-    let new_player = new PlayerOpponent(data[i].id, data[i].x, data[i].y, data[i].radius);
+    let new_player = new PlayerOpponent(data[i].id, data[i].x, data[i].y, data[i].radius, randomColor());
     opponnents.push(new_player);
   }
   console.log('updatePlayersList ' + opponnents.length );
