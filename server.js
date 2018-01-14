@@ -5,27 +5,27 @@ const app = express();
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
 const MongoClient = require('mongodb').MongoClient;
+const bodyParser = require('body-parser');
 
 // serve files from the public directory
 // define directiories which are exposed to web
 app.use(express.static(__dirname + '/node_modules'));
 app.use(express.static('public'));
-
+// body parser
+app.use(bodyParser.json()); // to support JSON-encoded bodies
+app.use(bodyParser.urlencoded({extended: true})); // to support URL-encoded bodies
 // connect to the db and start the express server
 let db;
 
 // Replace the URL below with the URL for your database
 //const url =  'mongodb://user:password@mongo_address:mongo_port/clicks';
-const url = 'mongodb://localhost:27017/clicks';
+const url = 'mongodb://localhost:27017/players';
 MongoClient.connect(url, (err, database) => {
   if(err) {
     return console.log(err);
   }
   db = database;
   // start the express web server listening on 8080
-  /*  app.listen(8080, () => {
-    console.log('listening on 8080');
-  });*/
   server.listen(8000, () => {
     console.log('Well done, now I am listening on ', server.address().port);
   });
@@ -59,6 +59,38 @@ app.post('/clicked', (req, res) => {
 // get the click data from the database
 app.get('/clicks', (req, res) => {
   db.collection('clicks').find().toArray((err, result) => {
+    if (err) return console.log(err);
+    res.send(result);
+  });
+});
+
+// add a document to the DB collection recording the player event
+app.post('/leaderboardUpdate', (req, res) => {
+  console.log(req.body.nicnkame);
+  console.log(req.body.score);
+  console.log(2);
+  const player = {
+    username: req.body.nickname,
+    score: req.body.score,
+    time: new Date()
+  };
+  // create players collection and save first entry
+  db.collection('players').save(player, (err, result) => {
+    console.log(3);
+    if (err) {
+      console.log(4);
+      return console.log(err);
+    }
+    console.log('user added to db');
+    // after saving redirect user to the index page
+    res.redirect('/');
+  });
+});
+
+// get the click data from the database
+app.get('/players', (req, res) => {
+  // find entries in the database, find returns cursor so we need to use toArray method
+  db.collection('players').find().toArray((err, result) => {
     if (err) return console.log(err);
     res.send(result);
   });

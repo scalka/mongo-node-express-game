@@ -9,13 +9,14 @@ class PlayerOpponent {
     this.y = Math.floor((Math.random() * 1000) + 1);
     this.radius = radius;
     this.color = color;
-    this.speed = 3;
+    this.speed = 4;
     this.angle = 55;
     this.vx = Math.cos(this.angle * Math.PI / 180) * this.speed;
     this.vy = Math.sin(this.angle * Math.PI / 180) * this.speed;
     this.ax = 0;
     this.ay = 0;
     this.collision = false;
+    this.nickname = 'nicnkame';
   }
 
   setId(id) {
@@ -48,8 +49,8 @@ class PlayerOpponent {
 class PlayerCircle extends PlayerOpponent {
   constructor(id = '', x, y, radius = 30, color = '#ffcccc') {
     super(id, x, y, radius, color);
-    this.speed = 3;
-    this.angle = 55;
+    this.speed = 4;
+    this.angle = 30;
     this.vx = Math.cos(this.angle * Math.PI / 180) * this.speed;
     this.vy = Math.sin(this.angle * Math.PI / 180) * this.speed;
     this.ax = 0;
@@ -66,16 +67,11 @@ class PlayerCircle extends PlayerOpponent {
     let distance = this.radius;
     if (dx * dx + dy * dy <= distance * distance) {
     	this.collision = true;
-      console.log('3');
       if ( this.radius > objectB.radius ) {
-        console.log('1');
         this.radius += 4;
         this.vx = -this.vx;
-        console.log('collision player wins');
         this.good_collision = true;
       } else if ( objectB.radius >= this.radius ) {
-        console.log('2');
-        console.log('GAME OVER collision opponent wins');
         this.bad_collision = true;
       }
     }
@@ -147,16 +143,17 @@ let randomColor = () => {
 
 //PROCESSING at start
 function setup() {
-  //let nickname = prompt('Nickname: ');
+  let nickname = prompt('Nickname: ');
   createCanvas(1000, 1000);
   player = new PlayerCircle();
+  player.nickname = nickname;
   for (let i = 0; i < 15; i++) {
     let snack = new PlayerOpponent(i, Math.floor((Math.random() * 1000) + 1), Math.floor((Math.random() * 1000) + 1), 5, randomColor());
     food.push(snack);
   }
   grid = new Grid(20, 20);
   grid.render();
-  score.innerHTML = player.radius;
+  score.innerHTML = `Score: ${player.radius}`;
 }
 //PROCESSING every .. seconds
 function draw() {
@@ -169,10 +166,10 @@ function draw() {
       let winner = player.checkCollision(opponnents[i]);
       if (player.good_collision) {
         socket.emit('playerLost', opponnents[i]);
-        //console.log('winner');
+        console.log('winner');
       } else if (player.bad_collision) {
         window.location.href = '/index.html';
-        //console.log('looser');
+        console.log('looser');
       } else {
         opponnents[i].draw();
       }
@@ -186,15 +183,15 @@ function draw() {
     }
     snack.draw();
   });
-  score.innerHTML = player.radius;
+  score.innerHTML = `Score: ${player.radius}`;
 }
+
 function keyPressed() {
   player.turn(keyCode);
 }
 
 // socket.io
 socket.on('connect', function(data) {
-  console.log(socket.id);
   player.setId(socket.id);
   socket.emit('newPlayer',  player );
 });
@@ -205,20 +202,15 @@ socket.on('playersList', function(data) {
     let new_player = new PlayerOpponent(data[i].id, data[i].x, data[i].y, data[i].radius, randomColor());
     opponnents.push(new_player);
   }
-
-//  let check = opponnents.findIndex(x => x.id === player.id);
-//  opponnents.splice(check, 1);
 });
 
 socket.on('updatedPlayersList', function(data) {
-  console.log('updatePlayersList ' + data );
   opponnents.length = 0;
 
   for (let i = 0; i < data.length; i++) {
     let new_player = new PlayerOpponent(data[i].id, data[i].x, data[i].y, data[i].radius, randomColor());
     opponnents.push(new_player);
   }
-  console.log('updatePlayersList ' + opponnents.length );
 //  let check = opponnents.findIndex(x => x.id === player.id);
 //  opponnents.splice(check, 1);
 });
@@ -227,6 +219,7 @@ socket.on('updatedPlayersPosition', function(data) {
   for (let i = 0; i < opponnents.length; i++) {
     opponnents[i].x = data[i].x;
     opponnents[i].y = data[i].y;
+    opponnents[i].radius = data[i].radius;
     opponnents[i].vx = data[i].vx;
     opponnents[i].vy = data[i].vy;
     opponnents[i].ax = data[i].ax;
@@ -236,19 +229,23 @@ socket.on('updatedPlayersPosition', function(data) {
 
 socket.on('youLost', function(data) {
   // game over screen
-  console.log(data);
+  saveScore(player.nickname, player.radius);
   window.location.href = data;
 });
 
-
-const button = document.getElementById('myButton');
-button.addEventListener('click', function(e) {
-  console.log('button was clicked');
-
-  fetch('/clicked', {method: 'POST'})
+function saveScore(nickname, score) {
+  console.log('saving score to the database');
+  fetch('/leaderboardUpdate', {
+    method: 'POST',
+    body: JSON.stringify({nickname: nickname, score: score}),
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    }
+  })
     .then(function(response) {
       if(response.ok) {
-        console.log('click was recorded');
+        console.log('user was recorded');
         return;
       }
       throw new Error('Request failed.');
@@ -256,18 +253,4 @@ button.addEventListener('click', function(e) {
     .catch(function(error) {
       console.log(error);
     });
-});
-
-setInterval(function() {
-  fetch('/clicks', {method: 'GET'})
-    .then(function(response) {
-      if(response.ok) return response.json();
-      throw new Error('Request failed.');
-    })
-    .then(function(data) {
-      document.getElementById('counter').innerHTML = `Button was clicked ${data.length} times`;
-    })
-    .catch(function(error) {
-      console.log(error);
-    });
-}, 1000);
+};

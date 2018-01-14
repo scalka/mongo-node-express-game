@@ -9,13 +9,14 @@
     <!-- P5.js-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.16/p5.js"></script>
   </head>
-  <body>
+  <body onload="fetchLeaderboard()">
     <h1>This is a start page. Eat only circles smaller than you are!</h1>
     <h2>Leaderboard: </h2><h2 id="score"></h2>
-    <ul>
-      <li></li>
+    <ul id="leaderboard_ul">
     </ul>
+
     <a id="start-btn" href="/game">Start</a>
+
   </body>
   <script src="start-client.js"></script>
-</html>
+</htm
