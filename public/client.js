@@ -81,16 +81,23 @@ class PlayerCircle extends PlayerOpponent {
   turn(direction) {
     switch (direction) {
     case 39: // right
-      this.vx = -this.vx;
+      this.vx = 1 * this.speed;
+      this.vy = 0 * this.speed;
       break;
     case 37: // left
-      this.vx = -this.vx;
+      //this.vx = -this.vx;
+      this.vx = -1 * this.speed;
+      this.vy = 0 * this.speed;
       break;
     case 40: //down
-      this.vy = -this.vy;
+      //this.vy = -this.vy;
+      this.vx = 0 * this.speed;
+      this.vy = 1 * this.speed;
       break;
     case 38: // up
-      this.vy = -this.vy;
+      //this.vy = -this.vy;
+      this.vx = 0 * this.speed;
+      this.vy = -1 * this.speed;
       break;
     }
   }
