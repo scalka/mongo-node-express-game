@@ -90,7 +90,8 @@ app.post('/leaderboardUpdate', (req, res) => {
 // get the click data from the database
 app.get('/players', (req, res) => {
   // find entries in the database, find returns cursor so we need to use toArray method
-  db.collection('players').find().toArray((err, result) => {
+  db.collection('players').find().sort({'score': -1}).limit(6).toArray((err, result) => {
+    console.log(result);
     if (err) return console.log(err);
     res.send(result);
   });
