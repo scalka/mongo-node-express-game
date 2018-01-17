@@ -13,3 +13,13 @@
 #start-btn:hover {
     background: #6ab8be;
 }
+#score_board {
+  background-color: #ffc689;
+  width: auto;
+  height: 50px;
+  position: absolute;
+  z-index: 1;
+  padding-bottom: 15px;
+  padding-left: 5px;
+  padding-right: 5px;
+}

@@ -64,8 +64,8 @@ class PlayerCircle extends PlayerOpponent {
     this.good_collision = false;
     let dx = this.x - objectB.x;
     let dy = this.y - objectB.y;
-    let distance = this.radius;
-    if (dx * dx + dy * dy <= distance * distance) {
+    //let distance = this.radius;
+    if (dx * dx + dy * dy <= this.radius * objectB.radius) {
     	this.collision = true;
       if ( this.radius > objectB.radius ) {
         this.radius += 4;
