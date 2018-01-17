@@ -1,18 +1,46 @@
+body {
+  padding: 20px;
+}
+
 #start-btn {
-    color: white;
-    background: #7fcad0;
-    padding: 10px 20px;
-    display: block;
-    margin: 10px 0;
-    text-align: center;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-size: 13px;
+  color: white;
+  background: #7fcad0;
+  padding: 20px 45px;
+  display: block;
+  margin: 10px 0;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 13px;
+  width: 200px;
 }
 
 #start-btn:hover {
     background: #6ab8be;
 }
+
+#exit {
+  display: none;
+  position: absolute;
+  z-index: 1;
+  color: white;
+  background: #7fcad0;
+  padding: 20px 45px;
+  margin: 257px 367px;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 35px;
+  width: 200px;
+}
+#exit:hover {
+    background: #6ab8be;
+}
+
+#leaderboard_ol {
+  font-size: 30px;
+}
+
 #score_board {
   background-color: #ffc689;
   width: auto;
@@ -22,4 +50,11 @@
   padding-bottom: 15px;
   padding-left: 5px;
   padding-right: 5px;
+}
+
+#exssit {
+
+  height: 400px;
+  width: 400px;
+  background-color:  #ffc689;
 }

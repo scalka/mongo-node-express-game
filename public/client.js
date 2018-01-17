@@ -99,6 +99,10 @@ class PlayerCircle extends PlayerOpponent {
       this.vx = 0 * this.speed;
       this.vy = -1 * this.speed;
       break;
+    case 27: // up
+      exitScreen();
+      console.log('escape');
+      break;
     }
   }
 }
@@ -140,6 +144,18 @@ let food = [];
 let player;
 let some_id;
 let score = document.getElementById('score');
+let no_exitscreen = true;
+let exit_btn = document.getElementById('exit');
+
+let exitScreen = () => {
+  if(no_exitscreen) {
+    no_exitscreen = false;
+    document.getElementById('exit').style.display = 'block';
+  } else {
+    no_exitscreen = true;
+    document.getElementById('exit').style.display = 'none';
+  }
+};
 
 let randomColor = () => {
   let x = Math.floor(Math.random() * 256);
@@ -155,7 +171,7 @@ function setup() {
   player = new PlayerCircle();
   player.nickname = nickname;
   for (let i = 0; i < 15; i++) {
-    let snack = new PlayerOpponent(i, Math.floor((Math.random() * 1000) + 1), Math.floor((Math.random() * 1000) + 1), 5, randomColor());
+    let snack = new PlayerOpponent(i, Math.floor((Math.random() * 1000) + 1), Math.floor((Math.random() * 1000) + 1), Math.floor((Math.random() * 35) + 1), randomColor());
     food.push(snack);
   }
   grid = new Grid(20, 20);
@@ -164,33 +180,39 @@ function setup() {
 }
 //PROCESSING every .. seconds
 function draw() {
+
+  exit_btn.addEventListener('click', () => {
+    saveScore(player.nickname, player.radius);
+  });
   // clear background
   grid.render();
-  player.draw();
-  socket.emit('updateOpponents', player);
-  for (let i = 0; i < opponnents.length; i++) {
-    if(opponnents[i].id !== player.id) {
-      let winner = player.checkCollision(opponnents[i]);
-      if (player.good_collision) {
-        socket.emit('playerLost', opponnents[i]);
-        console.log('winner');
-      } else if (player.bad_collision) {
-        window.location.href = '/index.html';
-        console.log('looser');
-      } else {
-        opponnents[i].draw();
+  if(no_exitscreen) {
+    player.draw();
+    socket.emit('updateOpponents', player);
+    for (let i = 0; i < opponnents.length; i++) {
+      if(opponnents[i].id !== player.id) {
+        let winner = player.checkCollision(opponnents[i]);
+        if (player.good_collision) {
+          socket.emit('playerLost', opponnents[i]);
+          console.log('winner');
+        } else if (player.bad_collision) {
+          window.location.href = '/index.html';
+          console.log('looser');
+        } else {
+          opponnents[i].draw();
+        }
       }
     }
+    food.forEach(function(snack) {
+      player.checkCollision(snack);
+      if ( player.good_collision ) {
+        snack.x = 0;
+        snack.y = 0;
+      }
+      snack.draw();
+    });
+    score.innerHTML = `Score: ${player.radius}`;
   }
-  food.forEach(function(snack) {
-    player.checkCollision(snack);
-    if ( player.good_collision ) {
-      snack.x = 0;
-      snack.y = 0;
-    }
-    snack.draw();
-  });
-  score.innerHTML = `Score: ${player.radius}`;
 }
 
 function keyPressed() {

@@ -1,7 +1,5 @@
 function fetchLeaderboard() {
-  const ul = document.getElementById('leaderboard_ul');
-
-
+  const ol = document.getElementById('leaderboard_ol');
   fetch('/players', {method: 'GET'})
     .then(function(response) {
       if(response.ok) return response.json();
@@ -15,13 +13,12 @@ function fetchLeaderboard() {
         return b.score - a.score;
       });
 
-      players.forEach(function(player) {
-        console.log(player);
+      for(let i = 0; i < 10; i++) {
         let li = document.createElement('li');
-        li.innerHTML = `${player.score} ${player.username}`;
-        ul.appendChild(li);
-      });
+        li.innerHTML = `${players[i].score} ${players[i].username}`;
+        ol.appendChild(li);
 
+      }
     })
     .catch(function(error) {
       console.log(error);
