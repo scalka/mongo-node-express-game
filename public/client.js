@@ -235,7 +235,6 @@ socket.on('playersList', function(data) {
 
 socket.on('updatedPlayersList', function(data) {
   opponnents.length = 0;
-
   for (let i = 0; i < data.length; i++) {
     let new_player = new PlayerOpponent(data[i].id, data[i].x, data[i].y, data[i].radius, randomColor());
     opponnents.push(new_player);
