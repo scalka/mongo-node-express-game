@@ -1,7 +1,5 @@
-// PROCESSING START
-// ----------------------------
+// Client side code
 // PlayerCircle Parent class (or subclass) - Player class
-// ----------------------------
 class PlayerOpponent {
   constructor(id = '', x, y, radius = 30, color = '#ffc689') {
     this.id = id;
@@ -45,7 +43,7 @@ class PlayerOpponent {
     return this;
   }
 } // end of PlayerCircle
-
+// Player child class
 class PlayerCircle extends PlayerOpponent {
   constructor(id = '', x, y, radius = 30, color = '#ffcccc') {
     super(id, x, y, radius, color);
@@ -106,7 +104,7 @@ class PlayerCircle extends PlayerOpponent {
     }
   }
 }
-
+// background class
 class Grid {
   constructor(rows, cols) {
     this.grid = []; // A multidimentional array containing the visual grid
