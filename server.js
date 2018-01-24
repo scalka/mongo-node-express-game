@@ -44,8 +44,8 @@ app.post('/leaderboardUpdate', (req, res) => {
     score: req.body.score,
     time: new Date()
   };
-  // create players collection and save first entry
-  db.collection('players').save(player, (err, result) => {
+  // create players collection and saves entry if user name does not exist otherwise updates
+  db.collection('players').update( { username: player.username }, player, { upsert:true }, (err, result) => {
     if (err) { return console.log(err); }
     console.log('user added to db');
     // after saving redirect user to the index page
