@@ -1,3 +1,4 @@
+// Client side code - index page
 function fetchLeaderboard() {
   const ol = document.getElementById('leaderboard_ol');
   fetch('/players', {method: 'GET'})
@@ -7,18 +8,18 @@ function fetchLeaderboard() {
     })
     .then(function(data) {
       console.log(data);
-
       let players = data;
+
       players.sort(function(a, b) {
         return b.score - a.score;
       });
 
-      for(let i = 0; i < 10; i++) {
+      players.forEach(function(player) {
         let li = document.createElement('li');
-        li.innerHTML = `${players[i].score} ${players[i].username}`;
+        li.innerHTML = `${player.score} ${player.username}`;
         ol.appendChild(li);
+      });
 
-      }
     })
     .catch(function(error) {
       console.log(error);

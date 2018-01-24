@@ -1,4 +1,4 @@
-// Client side code
+// Client side code - game page
 // PlayerCircle Parent class (or subclass) - Player class
 class PlayerOpponent {
   constructor(id = '', x, y, radius = 30, color = '#ffc689') {
@@ -143,15 +143,15 @@ let player;
 let some_id;
 let score = document.getElementById('score');
 let no_exitscreen = true;
-let exit_btn = document.getElementById('exit');
+let exit_btn = document.getElementById('exit_btn');
 
 let exitScreen = () => {
   if(no_exitscreen) {
     no_exitscreen = false;
-    document.getElementById('exit').style.display = 'block';
+    document.getElementById('exit_btn').style.display = 'block';
   } else {
     no_exitscreen = true;
-    document.getElementById('exit').style.display = 'none';
+    document.getElementById('exit_btn').style.display = 'none';
   }
 };
 
@@ -175,13 +175,14 @@ function setup() {
   grid = new Grid(20, 20);
   grid.render();
   score.innerHTML = `Score: ${player.radius}`;
-}
-//PROCESSING every .. seconds
-function draw() {
 
   exit_btn.addEventListener('click', () => {
     saveScore(player.nickname, player.radius);
   });
+}
+//PROCESSING every .. seconds
+function draw() {
+
   // clear background
   grid.render();
   if(no_exitscreen) {

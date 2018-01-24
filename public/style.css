@@ -19,7 +19,7 @@ body {
     background: #6ab8be;
 }
 
-#exit {
+#exit_btn {
   display: none;
   position: absolute;
   z-index: 1;
@@ -33,7 +33,7 @@ body {
   font-size: 35px;
   width: 200px;
 }
-#exit:hover {
+#exit_btn:hover {
     background: #6ab8be;
 }
 
