@@ -90,9 +90,9 @@ io.on('connection', (client) => {
     for (let i = 0; i < all_players.length; i++ ) {
       if(all_players[i].id === player.id) {
         // redirect client to the home page
-        io.to(player.id).emit('youLost', '/index.html');
+        client.to(player.id).emit('youLost', '/index.html');
         all_players.splice(i, 1); //delete from array
-        io.emit('updatedPlayersList', all_players); // sending updated array to clients
+        client.emit('updatedPlayersList', all_players); // sending updated array to clients
       }
     }
   });
@@ -103,7 +103,7 @@ io.on('connection', (client) => {
     for (let i = 0; i < all_players.length; i++ ) {
       if(all_players[i].id === client.id) {
         all_players.splice(i, 1); //delete from array
-        io.emit('updatedPlayersList', all_players); // updating
+        client.emit('updatedPlayersList', all_players); // updating
       }
     }
   });

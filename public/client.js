@@ -59,7 +59,7 @@ class PlayerCircle extends PlayerOpponent {
     this.bad_collision = false;
     this.good_collision = false;
   }
-
+  // object collision
   checkCollision(objectB) {
     this.bad_collision = false;
     this.good_collision = false;
@@ -78,7 +78,7 @@ class PlayerCircle extends PlayerOpponent {
     }
     return this;
   }
-
+  //keyboard controls
   turn(direction) {
     switch (direction) {
     case 39: // right
@@ -116,14 +116,14 @@ class Grid {
     this.colsCount = cols; // The width of the map, in columns
     this.tileSize = 64; // The tile size, in pixels
   }
-
+  // draw on canvas
   render() {
     // creating multidimentional array of grid cells
     for (let column = 0; column < this.colsCount; column++) {
       this.grid[column] = []; // create the next row (inner array)
       for (let row = 0; row < this.rowsCount; row++) {
         fill(255);
-        stroke(0);
+        strokeWeight(1);
         this.cell = {
           column: column,
           row: row,
@@ -147,7 +147,7 @@ let some_id;
 let score = document.getElementById('score');
 let no_exitscreen = true;
 let exit_btn = document.getElementById('exit_btn');
-
+// pause screen diaplay
 let exitScreen = () => {
   if(no_exitscreen) {
     no_exitscreen = false;
@@ -157,7 +157,7 @@ let exitScreen = () => {
     document.getElementById('exit_btn').style.display = 'none';
   }
 };
-
+// random color generator
 let randomColor = () => {
   let x = Math.floor(Math.random() * 256);
   let y = Math.floor(Math.random() * 256);
@@ -185,15 +185,13 @@ function setup() {
 }
 //PROCESSING every .. seconds
 function draw() {
-
-  // clear background
   grid.render();
   if(no_exitscreen) {
-    player.draw();
     socket.emit('updateOpponents', player);
+    // check for opponents collision and draw opponents
     for (let i = 0; i < opponnents.length; i++) {
       if(opponnents[i].id !== player.id) {
-        let winner = player.checkCollision(opponnents[i]);
+        player.checkCollision(opponnents[i]);
         if (player.good_collision) {
           socket.emit('playerLost', opponnents[i]);
           console.log('winner');
@@ -205,6 +203,7 @@ function draw() {
         }
       }
     }
+    // draw snacks
     food.forEach(function(snack) {
       player.checkCollision(snack);
       if ( player.good_collision ) {
@@ -213,6 +212,9 @@ function draw() {
       }
       snack.draw();
     });
+    // draw player on canvas
+    player.draw();
+    // update score
     score.innerHTML = `Score: ${player.radius}`;
   }
 }
