@@ -6,5 +6,6 @@ Flying Circle (FC) is a game developed as a part of the Advanced JavaScript modu
 
 # Setup
 1. Run ```mongod.exe```
+3. ```npm install```
 2. ``` nodemon server.js ```
 3. Go to ```localhost:8000```

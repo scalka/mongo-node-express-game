@@ -1,12 +1,13 @@
 // Client side code - game page
 // PlayerCircle Parent class (or subclass) - Player class
 class PlayerOpponent {
-  constructor(id = '', x, y, radius = 30, color = '#ffc689') {
+  constructor(id = '', x, y, radius = 30, color) {
     this.id = id;
     this.x = Math.floor((Math.random() * 1000) + 1);
     this.y = Math.floor((Math.random() * 1000) + 1);
     this.radius = radius;
     this.color = color;
+    this.strokeW = 1;
     this.speed = 4;
     this.angle = 55;
     this.vx = Math.cos(this.angle * Math.PI / 180) * this.speed;
@@ -27,6 +28,7 @@ class PlayerOpponent {
     this.vy += this.ay;
     this.x += this.vx;
     this.y += this.vy;
+    strokeWeight(this.strokeW);
     fill(this.color);
     ellipse(this.x, this.y, this.radius);
     this.canvasCollision();
@@ -45,8 +47,9 @@ class PlayerOpponent {
 } // end of PlayerCircle
 // Player child class
 class PlayerCircle extends PlayerOpponent {
-  constructor(id = '', x, y, radius = 30, color = '#ffcccc') {
+  constructor(id = '', x, y, radius = 30, color = '#7fcad0') {
     super(id, x, y, radius, color);
+    this.strokeW = 3;
     this.speed = 4;
     this.angle = 30;
     this.vx = Math.cos(this.angle * Math.PI / 180) * this.speed;
