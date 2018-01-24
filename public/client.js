@@ -172,7 +172,7 @@ function setup() {
   player = new PlayerCircle();
   player.nickname = nickname;
   for (let i = 0; i < 15; i++) {
-    let snack = new PlayerOpponent(i, Math.floor((Math.random() * 1000) + 1), Math.floor((Math.random() * 1000) + 1), Math.floor((Math.random() * 35) + 1), randomColor());
+    let snack = new PlayerOpponent(i, Math.floor((Math.random() * 1000) + 1), Math.floor((Math.random() * 1000) + 1), Math.floor((Math.random() * 50) + 1), randomColor());
     food.push(snack);
   }
   grid = new Grid(20, 20);
@@ -209,6 +209,10 @@ function draw() {
       if ( player.good_collision ) {
         snack.x = 0;
         snack.y = 0;
+      } else if (player.bad_collision) {
+        saveScore(player.nickname, player.radius);
+        window.location.href = '/index.html';
+        console.log('looser');
       }
       snack.draw();
     });
